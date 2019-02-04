@@ -53,10 +53,16 @@ quicker.
 
 ## Compiling
 
-This is only tested/compiled on macOS 10.14.1 using default build tools `clang`.
-Compiler flags used can be seen in the makefile. I have no idea how portable 
-the generated Go ASM code is although my understanding is that it should work
-for any `amd64`/`x86_64` CPU that supports SSE2.
+The Go code should compile with no extra deps since the ASM is committed.
+
+BUilding the ASM is only tested/compiled on macOS 10.14.1 using default build 
+tools `clang`. Compiler flags used can be seen in the makefile. I have no idea 
+how portable the generated Go ASM code is in practice although my understanding 
+is that it should work for any `amd64`/`x86_64` CPU that supports SSE2.
+
+Run `make install-deps` to download some of the deps for rebuilding the ASM. 
+You'll also need YASM (`brew instal yasm`). Then `make` will rebuild the Go ASM 
+or `make bench` will rebuild and run benchmarks.
 
 In practice a cpuid runtime check would be needed to select this 
 implementation or a pure-go one, something like 
