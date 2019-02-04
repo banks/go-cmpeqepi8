@@ -9,14 +9,6 @@ the paper.
 
 Uses github.com/minio/c2goasm to generate Go ASM for the SIMD instructions.
 
-## Conclusion (so far)
-
-On a 2013 Macbook Pro. It turns out that SIMD is slower than some other methods.
-It may be I didn't find the optimal Assembly code and it could be some other
-effects - the overhead of jumping to ASM which can't be inlined for example. I
-did attempt to mitigate that by forcing `go:noinline` on the competing methods
-with no change though.
-
 ## Sample results on 2013 MBP (i7-4850HQ)
 
 ```
@@ -33,3 +25,28 @@ BenchmarkIndexOfByteIn16Bytes_Brute_16-8           	200000000	         8.45 ns/o
 BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_16-8   	200000000	         6.79 ns/op	       0 B/op	       0 allocs/op
 ```
 
+## Conclusion (so far)
+
+On a 2013 Macbook Pro. It turns out that SIMD is slower than some other methods.
+It may be I didn't find the optimal Assembly code and it could be some other
+effects - the overhead of jumping to ASM which can't be inlined for example. I
+did attempt to mitigate that by forcing `go:noinline` on the competing methods
+with no change though.
+
+It also seems that brute force is much faster than `sort.Search` binary search 
+in all cases, and that Go (as of 1.11.5) is not smart enough to unroll the 
+simplest brute-force for loop since manually unrolling it into 16 `if` 
+statements is still always quicker.
+
+The fastest for 5 children (the smallest a Node16 in an ART should be) is 
+unrolled brute force. For all 16 nodes full, unrolled binary search is quicker
+(only ever requires 5 `if` branches).
+
+I've not looked at the ASM from these yet to determine if there is a way to get
+a totally branchless version the [equivalent of C ternary operator on some platforms](https://blog.demofox.org/2017/06/20/simd-gpu-friendly-branchless-binary-search/).
+
+## Recommendation
+
+For go-lang ART, the extra complexity of SSE instructions seems to not be 
+worth it for Node16 search and a manually unrolled binary search is likely 
+quicker.
