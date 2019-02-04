@@ -50,3 +50,16 @@ a totally branchless version the [equivalent of C ternary operator on some platf
 For go-lang ART, the extra complexity of SSE instructions seems to not be 
 worth it for Node16 search and a manually unrolled binary search is likely 
 quicker.
+
+## Compiling
+
+This is only tested/compiled on macOS 10.14.1 using default build tools `clang`.
+Compiler flags used can be seen in the makefile. I have no idea how portable 
+the generated Go ASM code is although my understanding is that it should work
+for any `amd64`/`x86_64` CPU that supports SSE2.
+
+In practice a cpuid runtime check would be needed to select this 
+implementation or a pure-go one, something like 
+[the one in internal/cpu](https://golang.org/src/internal/cpu/cpu_x86.go#L74).
+According to Go's internal/cpu package, SSE2 support is a requirement for the 
+amd64 arch so that may even be unnecessary?
