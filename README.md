@@ -40,13 +40,28 @@ BenchmarkIndexOfByteIn16Bytes_Brute_16-8           	200000000	         8.46 ns/o
 BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_16-8   	200000000	         6.26 ns/op	       0 B/op	       0 allocs/op
 ```
 
+But **with `go ... -gcflags="-l=4"`** which since go 1.10 allows inlining some intermediate functions we get:
+
+```
+BenchmarkIndexOfByteIn16Bytes_SIMD_5-8             	500000000	         3.28 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_SortBS_5-8           	200000000	         8.98 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_UnrolledBS_5-8       	300000000	         4.45 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_Brute_5-8            	500000000	         3.16 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_5-8    	500000000	         3.12 ns/op	       0 B/op	       0 allocs/op
+
+BenchmarkIndexOfByteIn16Bytes_SIMD_16-8            	300000000	         4.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_SortBS_16-8          	100000000	        14.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_UnrolledBS_16-8      	300000000	         4.46 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_Brute_16-8           	200000000	         7.74 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_16-8   	200000000	         6.23 ns/op	       0 B/op	       0 allocs/op
+```
+
 ## Conclusion (so far)
 
-On a 2013 Macbook Pro. It turns out that SIMD is slower than some other methods.
+On a 2013 Macbook Pro. It turns out that SIMD is slower than some other methods, 
+**unless `-gcflags="-l=4"` is used to compile the Go program**.
 It may be I didn't find the optimal Assembly code and it could be some other
-effects - the overhead of jumping to ASM which can't be inlined for example. I
-did attempt to mitigate that by forcing `go:noinline` on the competing methods
-with no change though.
+effects too though.
 
 It also seems that brute force is much faster than `sort.Search` binary search 
 in all cases, and that Go (as of 1.11.5) is not smart enough to unroll the 
@@ -64,7 +79,8 @@ a totally branchless version the [equivalent of C ternary operator on some platf
 
 For go-lang ART, the extra complexity of SSE instructions seems to not be 
 worth it for Node16 search and a manually unrolled binary search is likely 
-quicker.
+quicker unless non-standard go compiler optimizations are also enabled, 
+even then it's borderline.
 
 ## Compiling
 
