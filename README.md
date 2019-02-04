@@ -24,6 +24,21 @@ BenchmarkIndexOfByteIn16Bytes_UnrolledBS_16-8      	300000000	         5.27 ns/o
 BenchmarkIndexOfByteIn16Bytes_Brute_16-8           	200000000	         8.45 ns/op	       0 B/op	       0 allocs/op
 BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_16-8   	200000000	         6.79 ns/op	       0 B/op	       0 allocs/op
 ```
+## Sample results on 2017 MBP (i7-7700HQ)
+
+```
+BenchmarkIndexOfByteIn16Bytes_SIMD_5-8             	300000000	         5.01 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_SortBS_5-8           	200000000	         9.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_UnrolledBS_5-8       	300000000	         4.60 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_Brute_5-8            	500000000	         3.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_5-8    	500000000	         3.13 ns/op	       0 B/op	       0 allocs/op
+
+BenchmarkIndexOfByteIn16Bytes_SIMD_16-8            	300000000	         5.69 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_SortBS_16-8          	100000000	        14.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_UnrolledBS_16-8      	300000000	         4.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_Brute_16-8           	200000000	         8.46 ns/op	       0 B/op	       0 allocs/op
+BenchmarkIndexOfByteIn16Bytes_BruteUnrolled_16-8   	200000000	         6.26 ns/op	       0 B/op	       0 allocs/op
+```
 
 ## Conclusion (so far)
 
