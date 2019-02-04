@@ -1,4 +1,4 @@
-# Node16 search benchmarking
+# ART Node16 SIMD Search Benchmarking
 
 This repo is an experiment to try to get SSE2 accelerated search of 16 byte
 array as required for the Node16 of an [Adaptive Radix
